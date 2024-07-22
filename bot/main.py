@@ -5,18 +5,34 @@ import os
 from aiogram import Bot, Dispatcher, types
 from dotenv import load_dotenv
 
-from bot.db import REDIS_CLIENT
+from db import REDIS_CLIENT
 
+PATH = os.path.dirname(__file__)
 
 load_dotenv()
 
 REDIS_CLIENT = REDIS_CLIENT
-API_TOKEN = os.getenv("API_TOKEN")
+API_TOKEN = os.getenv("BOT_API_TOKEN")
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,
+    filename=PATH + "/logs/bot.log",
+    encoding="utf-8",
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
 
-logging.basicConfig(level=logging.INFO)
+
+@dp.message_handler(commands=["rates"])
+async def send_exchange_rates(message: types.Message):
+    rates = ""
+    keys = REDIS_CLIENT.keys()
+    for key in keys:
+        rate = REDIS_CLIENT.get(key).decode("utf-8")
+        rates += f"{key}: {rate}\n"
+    await message.reply(rates)
 
 
 @dp.message_handler(commands=["exchange"])
@@ -37,8 +53,14 @@ async def convert_currency(message: types.Message):
 
 
 async def main():
-    await dp.start_polling()
+    logger.info("Bot starting...")
+    await bot.delete_webhook(drop_pending_updates=True)
+    await dp.start_polling(Bot)
+    logger.info("Bot started!")
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except (KeyboardInterrupt, SystemExit):
+        logger.info("Bot stopped!")

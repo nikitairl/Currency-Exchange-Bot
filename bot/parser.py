@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 from aiohttp import ClientSession
 from dotenv import load_dotenv
 
-from bot.db import REDIS_CLIENT
+from db import REDIS_CLIENT
 
 load_dotenv()
 
