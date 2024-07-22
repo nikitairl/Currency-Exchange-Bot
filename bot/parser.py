@@ -1,7 +1,7 @@
 import asyncio
 import os
 import xml.etree.ElementTree as ET
-
+import logging
 from aiohttp import ClientSession
 from dotenv import load_dotenv
 
@@ -35,7 +35,7 @@ async def update_redis_rates():
     rates = parse_exchange_rates(xml_data)
     for char_code, rate in rates.items():
         REDIS_CLIENT.set(char_code, rate)
-
+    return
 
 if __name__ == "__main__":
     asyncio.run(update_redis_rates())

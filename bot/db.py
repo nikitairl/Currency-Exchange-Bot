@@ -1,3 +1,3 @@
 from redis import Redis
 
-REDIS_CLIENT = Redis(host="localhost", port=6379, db=0)
+REDIS_CLIENT = Redis(host="redis", port=6379, decode_responses=True)
