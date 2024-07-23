@@ -2,6 +2,9 @@
 
 This project is a Telegram bot that provides up-to-date currency exchange rates from the Central Bank of Russia. The bot allows users to fetch the latest exchange rates and perform currency conversions directly within Telegram.
 
+tg_bot = https://t.me/Ex_conv_bot
+(could be offline)
+
 ## Features
 
 - **Fetch Exchange Rates**: Retrieves the latest exchange rates from the Central Bank of Russia.
