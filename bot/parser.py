@@ -45,6 +45,7 @@ async def update_redis_rates():
     rates = parse_exchange_rates(xml_data)
     for char_code, rate in rates.items():
         REDIS_CLIENT.set(char_code, rate)
+    REDIS_CLIENT.set("RUB", 1)
     logging.info("Redis update completed")
     return
 
